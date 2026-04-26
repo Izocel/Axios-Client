@@ -41,6 +41,16 @@ export class Api {
     return (this as any).Instance;
   }
 
+  public static UpdateConfig(mutator: (config: AxiosRequestConfig) => void) {
+    if (!this.Axios) {
+      throw new Error(
+        "Axios instance not initialized. Call GetInstance() first.",
+      );
+    }
+
+    mutator(this.Axios.defaults as AxiosRequestConfig);
+  }
+
   public static ParseConfig(
     config?: AxiosRequestConfig<any>,
     controller?: AbortController,

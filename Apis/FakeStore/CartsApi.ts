@@ -12,8 +12,10 @@ export interface CartData {
 export class CartsApi extends FakeStoreApi {
   constructor(config?: AxiosRequestConfig<any>) {
     super(config);
-    CartsApi.Axios.defaults.baseURL =
-      CartsApi.Axios.defaults.baseURL!.concat("carts/");
+    CartsApi.UpdateConfig((cfg) => {
+      if (!cfg.baseURL) cfg.baseURL = "https://fakestoreapi.com/";
+      cfg.baseURL = cfg.baseURL.concat("carts/");
+    });
   }
 
   public static GetCart(id: number) {

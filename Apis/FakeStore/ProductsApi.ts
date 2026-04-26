@@ -13,8 +13,10 @@ export interface ProductData {
 export class ProductsApi extends FakeStoreApi {
   constructor(config?: AxiosRequestConfig<any>) {
     super(config);
-    ProductsApi.Axios.defaults.baseURL =
-      ProductsApi.Axios.defaults.baseURL!.concat("products/");
+    ProductsApi.UpdateConfig((cfg) => {
+      if (!cfg.baseURL) cfg.baseURL = "https://fakestoreapi.com/";
+      cfg.baseURL = cfg.baseURL.concat("products/");
+    });
   }
 
   public static GetProduct(id: number) {

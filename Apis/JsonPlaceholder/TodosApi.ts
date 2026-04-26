@@ -11,8 +11,10 @@ export interface TodoData {
 export class TodosApi extends JsonPlaceholderApi {
   constructor(config?: AxiosRequestConfig<any>) {
     super(config);
-    TodosApi.Axios.defaults.baseURL =
-      TodosApi.Axios.defaults.baseURL!.concat("todos/");
+    TodosApi.UpdateConfig((cfg) => {
+      if (!cfg.baseURL) cfg.baseURL = "https://jsonplaceholder.typicode.com/";
+      cfg.baseURL = cfg.baseURL.concat("todos/");
+    });
   }
 
   public static GetTodo(id: number) {

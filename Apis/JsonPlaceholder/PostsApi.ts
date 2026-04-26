@@ -11,8 +11,10 @@ export interface PostData {
 export class PostsApi extends JsonPlaceholderApi {
   constructor(config?: AxiosRequestConfig<any>) {
     super(config);
-    PostsApi.Axios.defaults.baseURL =
-      PostsApi.Axios.defaults.baseURL!.concat("posts/");
+    PostsApi.UpdateConfig((cfg) => {
+      if (!cfg.baseURL) cfg.baseURL = "https://jsonplaceholder.typicode.com/";
+      cfg.baseURL = cfg.baseURL.concat("posts/");
+    });
   }
 
   public static GetPost(id: number) {
