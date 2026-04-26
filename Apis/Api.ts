@@ -1,7 +1,7 @@
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
 export interface ApiResponse<T> {
-  controller?: AbortController;
+  controller: AbortController;
   config: AxiosRequestConfig<any>;
   call: () => Promise<AxiosResponse<T>>;
 }

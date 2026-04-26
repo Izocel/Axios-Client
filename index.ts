@@ -1,4 +1,4 @@
-import { CartData } from "./Apis/FakeStore/CartsApi";
+import { CartData, CartsApi } from "./Apis/FakeStore/CartsApi";
 import { ProductData } from "./Apis/FakeStore/ProductsApi";
 import { PostData } from "./Apis/JsonPlaceholder/PostsApi";
 import { TodoData } from "./Apis/JsonPlaceholder/TodosApi";
@@ -7,7 +7,7 @@ import { ProductsController } from "./Controllers/FakeStore/ProductsController";
 import { PostsController } from "./Controllers/JsonPlaceholder/PostsController";
 import { TodosController } from "./Controllers/JsonPlaceholder/TodosController";
 
-async function main() {
+async function TestController() {
   try {
     const results: {
       todo: TodoData;
@@ -52,7 +52,8 @@ async function main() {
       throw new Error("The results of API calls are not consistent");
     }
 
-    console.info("Results:", results);
+    console.log("All API calls returned consistent results.");
+    return true;
   } catch (error) {
     switch ((error as any).name) {
       case "CanceledError":
@@ -61,6 +62,52 @@ async function main() {
       default:
         throw error;
     }
+  }
+}
+
+async function TestConfigMutation() {
+  // Example of using UpdateConfig to add a custom header
+  CartsApi.UpdateConfig((config) => {
+    delete config.headers?.["Authorization"];
+    config.headers = {
+      ...config.headers,
+      "X-Custom-Header": "MyValue",
+    };
+  });
+
+  // Make a request to verify the header is set
+  const { call, config, controller } = CartsApi.GetCart(1);
+  try {
+    const response = await call();
+    console.info("Response with custom header:", response.data);
+
+    if (response.config.headers["X-Custom-Header"] !== "MyValue") {
+      throw new Error("Custom header was not set in the request");
+    }
+
+    if (response.config.headers["Authorization"]) {
+      throw new Error("Authorization header should have been removed");
+    }
+
+    console.info("Config mutation test passed");
+    return true;
+  } catch (error) {
+    switch ((error as any).name) {
+      case "CanceledError":
+        console.warn("The request was canceled.");
+        break;
+      default:
+        throw error;
+    }
+  }
+}
+
+async function main() {
+  try {
+    await TestController();
+    await TestConfigMutation();
+  } catch (error) {
+    console.error("An error occurred during execution:", error);
   }
 }
 
