@@ -4,20 +4,24 @@ This repository is a **Proof of Concept (POC)** for managing API clients using A
 
 ## Concept
 
-- **Centralized API Management:** Each API is represented as a class, using Axios for HTTP requests.
-- **Singleton Pattern:** Ensures only one instance of each API or controller exists, preventing config override and maintaining consistency.
-- **Static Methods:** API methods are exposed statically, so you never need to manually instantiate API classes.
-- **AbortController Support:** Each API call provides an `AbortController` for request cancellation.
-- **Separation of Concerns:** Controllers manage orchestration/business logic, while API classes handle HTTP requests.
+- **Class-based API Management:** Each API is encapsulated as a TypeScript class, leveraging Axios for HTTP requests.
+- **Singleton Enforcement:** Guarantees a single instance per API/controller, ensuring consistent configuration and preventing accidental overrides.
+- **Static API Methods:** All API actions are exposed as static methods, enabling direct usage without manual instantiation.
+- **Runtime Config Mutation:** Instantly update or mutate Axios instance configuration (e.g., headers, baseURL) at runtime.
+- **AbortController Integration:** Every API call supports cancellation for robust request management.
+- **Separation of Concerns:** Business/orchestration logic is handled in controllers, while API classes focus on HTTP logic.
+- **Extensible & Maintainable:** Easily extend or compose new APIs and controllers for scalable projects.
 
 ## Features
 
-- TypeScript-first, Axios-powered API client base
-- Static method access for all API calls
-- Singleton instance management (no accidental config override)
-- Extensible: add new APIs or endpoints by subclassing
-- AbortController for request cancellation
-- Clean separation between API and controller logic
+- TypeScript-first, class-based API client architecture
+- Direct static method access for all API endpoints
+- Singleton instance management for config safety
+- Runtime mutation of Axios config (headers, baseURL, etc.)
+- AbortController support for request cancellation
+- Clear separation between API and controller logic
+- Easily extensible for new endpoints or services
+- Integration-ready for runtime/integration testing
 
 ## Example Usage
 
