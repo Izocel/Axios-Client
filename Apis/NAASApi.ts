@@ -1,5 +1,5 @@
+import { AxiosRequestConfig } from "axios";
 import { Api } from "./Api";
-
 export interface NopeData {
     reason: string;
 }
@@ -10,7 +10,7 @@ export class NAASApi extends Api {
         super({ baseURL: "https://naas.isalman.dev/" });
     }
 
-    public static GetNope<T = NopeData>() {
-        return this.Get<T>("no");
+    public static GetNope<T = NopeData>(config?: AxiosRequestConfig<any>) {
+        return this.Get<T>("no", config);
     }
 }

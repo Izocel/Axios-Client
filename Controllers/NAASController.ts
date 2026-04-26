@@ -13,7 +13,6 @@ export class NAASController extends Controller<NAASApi> {
             console.log("Request aborted");
         }, 10_000);
 
-
         const response = await call();
         return response.data || { reason: "No reason provided" };
     }

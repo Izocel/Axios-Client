@@ -70,7 +70,30 @@ main();
 
 - `Api.ts` - Base API client with Axios instance and abort support
 - `NAASApi.ts` - Example API client extending the base for a specific endpoint
+- `Controller.ts` - Generic singleton controller for managing API logic
+- `NAASController.ts` - Example controller extending the base for a specific API
 - `index.ts` - Example usage
+
+## Controller Class Explained
+
+The `Controller` class is a generic singleton controller designed to manage API logic and provide a consistent interface for interacting with API clients. It uses a static `GetInstance()` method to ensure only one instance of each controller exists, following the singleton pattern. This is similar to the API client pattern, but for controller logic.
+
+**Key Features:**
+
+- **Singleton Pattern:** Only one instance of each controller is created and reused throughout the application.
+- **Generic Design:** The controller can be extended for different API clients, making it flexible and reusable.
+- **Centralized Logic:** Keeps business or orchestration logic separate from the API client, promoting clean architecture.
+
+**Example:**
+
+```typescript
+import { NAASController } from "./Controllers/NAASController";
+
+const controller = NAASController.GetInstance();
+// Use controller methods to interact with the API
+```
+
+This approach helps organize your codebase by separating API request logic (in the API classes) from higher-level orchestration or business logic (in the controller classes).
 
 ## Requirements
 
