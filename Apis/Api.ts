@@ -43,6 +43,8 @@ export class Api {
 
   public static UpdateConfig(mutator: (config: AxiosRequestConfig) => void) {
     if (!this.Axios) {
+      // Since we use UpdateConfig also in constructors
+      // Use "super" first principle otherwise getting instance will cause infinite recursion
       throw new Error(
         "Axios instance not initialized. Call GetInstance() first.",
       );
