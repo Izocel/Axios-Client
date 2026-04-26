@@ -75,8 +75,8 @@ async function TestController() {
     results.posts = await PostsController.GetPosts();
 
     results.cart = await CartsController.GetCart(1);
-    results.carts = await CartsController.GetCarts();
     results.product = await ProductsController.GetProduct(1);
+    results.carts = await CartsController.GetCarts();
     results.products = await ProductsController.GetProducts();
 
     const tmp_todo = await TodosController.GetTodo(1);
