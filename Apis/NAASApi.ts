@@ -1,4 +1,3 @@
-import { AxiosRequestConfig } from "axios";
 import { Api } from "./Api";
 
 export interface NopeData {

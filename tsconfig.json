@@ -10,7 +10,11 @@
         "rootDir": "./"
     },
     "include": [
-        "*.ts"
+        "*.ts",
+        "Controllers/NAASController.ts",
+        "Controllers/Controller.ts",
+        "Apis/Api.ts",
+        "Apis/NAASApi.ts"
     ],
     "exclude": [
         "node_modules",
