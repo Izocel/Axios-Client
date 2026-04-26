@@ -33,6 +33,29 @@ console.log(response.data);
 controller.abort();
 ```
 
+## Mutating API Config at Runtime
+
+You can update the Axios instance configuration at runtime for any API class using the static `UpdateConfig` method. This is useful for changing or removing headers (such as Authorization) or any other Axios config property after the instance is created.
+
+**Example:**
+
+```typescript
+// Remove the Authorization header and add a custom header
+CartsApi.UpdateConfig((config) => {
+  delete config.headers?.["Authorization"];
+  config.headers = {
+    ...config.headers,
+    "X-Custom-Header": "MyValue",
+  };
+});
+
+// All subsequent requests will use the updated config
+const { call } = CartsApi.GetCart(1);
+const response = await call();
+```
+
+This allows you to dynamically adjust authentication, base URLs, or any other Axios config at runtime.
+
 ## Singleton & Static Inheritance
 
 - All API classes use a static `GetInstance()` method to ensure a single instance per class.
@@ -74,6 +97,35 @@ const instance = MyApi.GetInstance(); // Always the same instance
 npm install
 npx ts-node index.ts
 ```
+
+## Tests & Validation
+
+This POC uses runtime/integration tests directly in `index.ts` to validate API logic and config mutation. There are no separate test files; instead, test functions are called from `main()`.
+
+**Example test for config mutation:**
+
+```typescript
+async function TestConfigMutation() {
+  CartsApi.UpdateConfig((config) => {
+    delete config.headers?.["Authorization"];
+    config.headers = {
+      ...config.headers,
+      "X-Custom-Header": "MyValue",
+    };
+  });
+  const { call } = CartsApi.GetCart(1);
+  const response = await call();
+  if (response.config.headers["X-Custom-Header"] !== "MyValue") {
+    throw new Error("Custom header was not set in the request");
+  }
+  if (response.config.headers["Authorization"]) {
+    throw new Error("Authorization header should have been removed");
+  }
+  console.info("Config mutation test passed");
+}
+```
+
+You can add or modify test functions in `index.ts` to validate new features or API behaviors as needed.
 
 ---
 
