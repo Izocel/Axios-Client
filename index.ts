@@ -92,7 +92,7 @@ async function TestController() {
       throw new Error("The results of API calls are not consistent");
     }
 
-    console.log("All API calls returned consistent results.");
+    console.log("Controller test passed");
     return true;
   } catch (error) {
     switch ((error as any).name) {
