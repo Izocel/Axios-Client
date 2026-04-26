@@ -5,7 +5,7 @@ This repository is a **Proof of Concept (POC)** for an Axios-based API client in
 ## Features
 
 - **Axios-based API client**: Uses Axios for HTTP requests with TypeScript support.
-- **AbortController integration**: Each API call returns an `AbortController` alongside the call promise, allowing you to abort requests as needed.
+- **AbortController integration**: Each API response returns an `AbortController` alongside the response promise, allowing you to abort requests as needed.
 - **Extensible API structure**: Easily extend the base API client for different endpoints or services.
 
 ## Static Functionality Explained
@@ -13,7 +13,7 @@ This repository is a **Proof of Concept (POC)** for an Axios-based API client in
 This POC uses static methods and singletons for API client management:
 
 - **Singleton Pattern**: The `GetInstance()` static method ensures only one instance of each API client exists. This avoids unnecessary re-initialization and keeps configuration consistent.
-- **Static API Methods**: Methods like `Get()` and `GetNope()` are static, so you can call them directly on the class without creating an object. They automatically use the singleton instance internally.
+- **Static API Methods**: Methods like `Get()` and `GetNope()` are static, so you can response them directly on the class without creating an object. They automatically use the singleton instance internally.
 - **Why Static?**
   - Simplifies usage: No need to manually instantiate the API client.
   - Centralizes configuration: All requests share the same Axios instance and settings.
@@ -24,7 +24,7 @@ This POC uses static methods and singletons for API client management:
 ```typescript
 // No need to do: const api = new NAASApi();
 // Just use static methods:
-const { call, controller } = NAASApi.GetNope();
+const { response, controller } = NAASApi.GetNope();
 ```
 
 This approach is especially useful for applications where you want a single, shared API client throughout your codebase.
@@ -37,7 +37,7 @@ import { NAASApi } from "./NAASApi";
 async function main() {
   NAASApi.GetInstance();
 
-  const { call, controller } = NAASApi.GetNope();
+  const { response, controller } = NAASApi.GetNope();
 
   // Optionally abort the request after some time
   setTimeout(() => {
@@ -46,16 +46,16 @@ async function main() {
   }, 10_000);
 
   try {
-    const resp = await call;
+    const resp = await response;
     const reason = resp.data?.reason || "No reason provided";
-    console.log("API call successful:", reason);
+    console.log("API response successful:", reason);
   } catch (error) {
     switch ((error as any).name) {
       case "CanceledError":
         console.warn("Request was canceled");
         break;
       default:
-        console.error("Error during API call:", error);
+        console.error("Error during API response:", error);
         break;
     }
   }

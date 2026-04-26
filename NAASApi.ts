@@ -7,12 +7,8 @@ export interface NopeData {
 
 //https://github.com/hotheadhacker/no-as-a-service
 export class NAASApi extends Api {
-    protected defaults = {
-        baseURL: "https://no-as-a-service.com/api/v1/",
-    };
-
-    constructor(config?: AxiosRequestConfig<any>) {
-        super(config);
+    constructor() {
+        super({ baseURL: "https://naas.isalman.dev/" });
     }
 
     public static GetNope<T = NopeData>() {
