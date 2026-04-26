@@ -1,8 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
-export interface ApiResponse<T> {
-    response: Promise<AxiosResponse<T>>;
+export interface Apicall<T> {
     controller?: AbortController;
+    config: AxiosRequestConfig<any>;
+    call: () => Promise<AxiosResponse<T>>;
 }
 
 export class Api {
@@ -21,44 +22,41 @@ export class Api {
         return (this as any).instance;
     }
 
-    public static Get<T = any>(url: string, config?: AxiosRequestConfig<any>): ApiResponse<T> {
-        const self = this.GetInstance();
-        const controller = new AbortController();
+
+    public static ParseConfig(config?: AxiosRequestConfig<any>, controller?: AbortController) {
         config = config || {};
+        controller = controller || new AbortController();
         config.signal = controller.signal;
-        return { response: self.axios.get<T>(url, config), controller };
+        return { controller, config } as any;
     }
 
-    public static Post<T = any>(url: string, data?: any, config?: AxiosRequestConfig<any>): ApiResponse<T> {
+    public static Get<T = any>(url: string, config?: AxiosRequestConfig<any>): Apicall<T> {
         const self = this.GetInstance();
-        const controller = new AbortController();
-        config = config || {};
-        config.signal = controller.signal;
-        return { response: self.axios.post<T>(url, data, config), controller };
-
+        const { controller, config: finalConfig } = this.ParseConfig(config);
+        return { call: () => self.axios.get<T>(url, finalConfig), controller, config: finalConfig };
     }
 
-    public static Put<T = any>(url: string, data?: any, config?: AxiosRequestConfig<any>): ApiResponse<T> {
+    public static Post<T = any>(url: string, data?: any, config?: AxiosRequestConfig<any>): Apicall<T> {
         const self = this.GetInstance();
-        const controller = new AbortController();
-        config = config || {};
-        config.signal = controller.signal;
-        return { response: self.axios.put<T>(url, data, config), controller };
+        const { controller, config: finalConfig } = this.ParseConfig(config);
+        return { call: () => self.axios.post<T>(url, data, finalConfig), controller, config: finalConfig };
     }
 
-    public static Delete<T = any>(url: string, config?: AxiosRequestConfig<any>): ApiResponse<T> {
+    public static Put<T = any>(url: string, data?: any, config?: AxiosRequestConfig<any>): Apicall<T> {
         const self = this.GetInstance();
-        const controller = new AbortController();
-        config = config || {};
-        config.signal = controller.signal;
-        return { response: self.axios.delete<T>(url, config), controller };
+        const { controller, config: finalConfig } = this.ParseConfig(config);
+        return { call: () => self.axios.put<T>(url, data, finalConfig), controller, config: finalConfig };
     }
 
-    public static Patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig<any>): ApiResponse<T> {
+    public static Delete<T = any>(url: string, config?: AxiosRequestConfig<any>): Apicall<T> {
         const self = this.GetInstance();
-        const controller = new AbortController();
-        config = config || {};
-        config.signal = controller.signal;
-        return { response: self.axios.patch<T>(url, data, config), controller };
+        const { controller, config: finalConfig } = this.ParseConfig(config);
+        return { call: () => self.axios.delete<T>(url, finalConfig), controller, config: finalConfig };
+    }
+
+    public static Patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig<any>): Apicall<T> {
+        const self = this.GetInstance();
+        const { controller, config: finalConfig } = this.ParseConfig(config);
+        return { call: () => self.axios.patch<T>(url, data, finalConfig), controller, config: finalConfig };
     }
 }

@@ -5,7 +5,7 @@ async function main() {
     try {
         NAASApi.GetInstance();
 
-        const { response, controller } = NAASApi.GetNope();
+        const { call, controller, config } = NAASApi.GetNope();
 
         // To demonstrate aborting the request (optional)
         setTimeout(() => {
@@ -14,8 +14,8 @@ async function main() {
         }, 10_000);
 
 
-        const resp = await response;
-        const data: NopeData = resp.data || { reason: "No reason provided" };
+        const response = await call();
+        const data: NopeData = response.data || { reason: "No reason provided" };
         console.log("API response successful:", data.reason);
     } catch (error) {
         switch ((error as any).name) {
