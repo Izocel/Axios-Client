@@ -11,10 +11,10 @@
     },
     "include": [
         "*.ts",
-        "Controllers/NAASController.ts",
+        "Controllers/JsonPlaceholder/TodosController.ts",
         "Controllers/Controller.ts",
         "Apis/Api.ts",
-        "Apis/NAASApi.ts"
+        "Apis/JsonPlaceholder/JsonPlaceholderApi.ts"
     ],
     "exclude": [
         "node_modules",
