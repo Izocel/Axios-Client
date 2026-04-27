@@ -1,9 +1,11 @@
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
-export interface ApiResponse<T> {
+export interface ApiRequest<T> {
+  data?: T;
+  url?: string;
   controller: AbortController;
   config: AxiosRequestConfig<any>;
-  call: () => Promise<AxiosResponse<T>>;
+  call: (config?: AxiosRequestConfig<T>) => Promise<AxiosResponse<T>>;
 }
 
 export class Api {
@@ -53,77 +55,64 @@ export class Api {
     mutator(this.Axios.defaults as AxiosRequestConfig);
   }
 
-  public static ParseConfig(
+  public static PrepareRequest<T>(
+    method: "get" | "post" | "put" | "delete" | "patch" = "get",
+    url: string,
     config?: AxiosRequestConfig<any>,
-    controller?: AbortController,
-  ) {
-    config = config || {};
-    controller = controller || new AbortController();
-    config.signal = controller.signal;
-    return { controller, config } as any;
+    data?: T,
+  ): ApiRequest<T> {
+    const controller = new AbortController();
+    config = {
+      ...config,
+      url,
+      data,
+      method,
+      signal: controller.signal,
+    };
+
+    return {
+      config,
+      controller,
+      call: async (config?: AxiosRequestConfig<T>) =>
+        this.selfAxios.request<T>({ ...config }),
+    };
   }
 
   public static Get<T = any>(
     url: string,
     config?: AxiosRequestConfig<any>,
-  ): ApiResponse<T> {
-    const { controller, config: finalConfig } = this.ParseConfig(config);
-    const cvlient = this.selfAxios;
-    return {
-      call: async () => cvlient.get<T>(url, finalConfig),
-      controller,
-      config: finalConfig,
-    };
+  ): ApiRequest<T> {
+    return this.PrepareRequest<T>("get", url, config);
   }
 
   public static Post<T = any>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig<any>,
-  ): ApiResponse<T> {
-    const { controller, config: finalConfig } = this.ParseConfig(config);
-    return {
-      call: async () => this.selfAxios.post<T>(url, data, finalConfig),
-      controller,
-      config: finalConfig,
-    };
+  ): ApiRequest<T> {
+    return this.PrepareRequest<T>("post", url, config, data);
   }
 
   public static Put<T = any>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig<any>,
-  ): ApiResponse<T> {
-    const { controller, config: finalConfig } = this.ParseConfig(config);
-    return {
-      call: async () => this.selfAxios.put<T>(url, data, finalConfig),
-      controller,
-      config: finalConfig,
-    };
+  ): ApiRequest<T> {
+    return this.PrepareRequest<T>("put", url, config, data);
   }
 
   public static Delete<T = any>(
     url: string,
     config?: AxiosRequestConfig<any>,
-  ): ApiResponse<T> {
-    const { controller, config: finalConfig } = this.ParseConfig(config);
-    return {
-      call: async () => this.selfAxios.delete<T>(url, finalConfig),
-      controller,
-      config: finalConfig,
-    };
+  ): ApiRequest<T> {
+    return this.PrepareRequest<T>("delete", url, config);
   }
 
   public static Patch<T = any>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig<any>,
-  ): ApiResponse<T> {
-    const { controller, config: finalConfig } = this.ParseConfig(config);
-    return {
-      call: async () => this.selfAxios.patch<T>(url, data, finalConfig),
-      controller,
-      config: finalConfig,
-    };
+  ): ApiRequest<T> {
+    return this.PrepareRequest<T>("patch", url, config, data);
   }
 }
