@@ -71,8 +71,8 @@ export class Api {
     return {
       config,
       controller,
-      call: async (config?: AxiosRequestConfig<T>) =>
-        this.selfAxios.request<T>({ ...config }),
+      call: async (c?: AxiosRequestConfig<T>) =>
+        this.selfAxios.request<T>(c ?? config),
     };
   }
 
