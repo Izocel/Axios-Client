@@ -10,13 +10,12 @@
             "request": "launch",
             "runtimeArgs": [
                 "-r",
-                "ts-node/register"
+                "ts-node/register",
             ],
             "args": [
                 "${workspaceFolder}/index.ts"
             ],
             "cwd": "${workspaceFolder}",
-            "protocol": "inspector",
             "env": {
                 "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json"
             },

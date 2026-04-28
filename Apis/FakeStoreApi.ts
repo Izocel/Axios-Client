@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
-import { FAKE_STORE_API_KEY } from "../../env.json";
-import { Api } from "../Api";
+import { FAKE_STORE_API_KEY } from "../env.json";
+import { Api } from "./Api";
 
 //https://fakestoreapi.com/docs
 export class FakeStoreApi extends Api {

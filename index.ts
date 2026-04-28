@@ -1,11 +1,8 @@
-import { CartData, CartsApi } from "./Apis/FakeStore/CartsApi";
-import { ProductData } from "./Apis/FakeStore/ProductsApi";
-import { PostData } from "./Apis/JsonPlaceholder/PostsApi";
-import { TodoData } from "./Apis/JsonPlaceholder/TodosApi";
-import { CartsController } from "./Controllers/FakeStore/CartsController";
-import { ProductsController } from "./Controllers/FakeStore/ProductsController";
-import { PostsController } from "./Controllers/JsonPlaceholder/PostsController";
-import { TodosController } from "./Controllers/JsonPlaceholder/TodosController";
+import { CartsApi } from "./Apis/CartsApi";
+import { CartsController } from "./Controllers/CartsController";
+import { ProductsController } from "./Controllers/ProductsController";
+import { CartData } from "./Models/Response/CartData";
+import { ProductData } from "./Models/Response/ProductData";
 
 async function TestConfigMutation() {
   try {
@@ -50,42 +47,22 @@ async function TestConfigMutation() {
 async function TestController() {
   try {
     const results: {
-      todo: TodoData;
-      todos: TodoData[];
-      post: PostData;
-      posts: PostData[];
       product: ProductData;
       products: ProductData[];
       cart: CartData;
       carts: CartData[];
     } = {
-      todo: {} as TodoData,
-      todos: [] as TodoData[],
-      post: {} as PostData,
-      posts: [] as PostData[],
       product: {} as ProductData,
       products: [] as ProductData[],
       cart: {} as CartData,
       carts: [] as CartData[],
     };
 
-    results.todo = await TodosController.GetTodo(1);
-    results.todos = await TodosController.GetTodos();
-    results.post = await PostsController.GetPost(1);
-    results.posts = await PostsController.GetPosts();
-
     results.cart = await CartsController.GetCart(1);
     results.product = await ProductsController.GetProduct(1);
     results.carts = await CartsController.GetCarts();
     results.products = await ProductsController.GetProducts();
-
-    const tmp_todo = await TodosController.GetTodo(1);
     const tmp_product = await ProductsController.GetProduct(1);
-
-    // Assert that tmp and results.todo are the same
-    if (JSON.stringify(tmp_todo) !== JSON.stringify(results.todo)) {
-      throw new Error("The results of API calls are not consistent");
-    }
 
     // Assert that tmp and results.product are the same
     if (JSON.stringify(tmp_product) !== JSON.stringify(results.product)) {

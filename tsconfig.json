@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "es2022",
-        "module": "nodenext",
+        "module": "NodeNext",
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
@@ -11,10 +11,6 @@
     },
     "include": [
         "*.ts",
-        "Controllers/JsonPlaceholder/TodosController.ts",
-        "Controllers/Controller.ts",
-        "Apis/Api.ts",
-        "Apis/JsonPlaceholder/JsonPlaceholderApi.ts"
     ],
     "exclude": [
         "node_modules",

@@ -1,13 +1,6 @@
 import { AxiosRequestConfig } from "axios";
+import { CartData } from "../Models/Response/CartData";
 import { FakeStoreApi } from "./FakeStoreApi";
-import { ProductData } from "./ProductsApi";
-
-export interface CartData {
-  id: number;
-  userId: number;
-  date: string;
-  products: ProductData[];
-}
 
 export class CartsApi extends FakeStoreApi {
   constructor(config?: AxiosRequestConfig<any>) {
