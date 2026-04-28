@@ -8,7 +8,7 @@ export const RequestSchema = z.object({
 export class Request extends Model<typeof RequestSchema> {
   private _id?: number;
 
-  constructor(data: any = {}) {
+  constructor(data: Partial<z.infer<typeof RequestSchema>> = {}) {
     super(RequestSchema, data, true);
     Object.assign(this, data);
   }

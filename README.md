@@ -71,6 +71,89 @@ class MyApi extends BaseApi {}
 const instance = MyApi.GetInstance(); // Always the same instance
 ```
 
+## Model Class & Validations
+
+This project uses a base `Model` class (see [Models/Model.ts](Models/Model.ts)) to provide runtime validation for data models using [Zod](https://github.com/colinhacks/zod). This ensures that all request and response models can be validated against a schema before use.
+
+### Model Class Overview
+
+- The abstract `Model<T extends z.ZodSchema>` class provides:
+  - Schema-based validation using Zod
+  - `validate(data)` method to check validity and collect errors
+  - `enforce(data)` method to throw if validation fails
+  - `isValid` and `errors` properties for validation state
+  - Automatic validation on construction
+
+#### Example: Creating a Validated Model
+
+```typescript
+import z from "zod";
+import { Model } from "../Model";
+
+// Define a Zod schema
+export const RequestSchema = z.object({
+  id: z.number().gt(0).optional(),
+});
+
+// Extend the Model class
+export class Request extends Model<typeof RequestSchema> {
+  constructor(data: Partial<z.infer<typeof RequestSchema>> = {}) {
+    super(RequestSchema, data, true); // 'true' enforces validation
+    Object.assign(this, data);
+  }
+}
+
+// Usage
+const req = new Request({ id: 5 });
+if (!req.isValid) {
+  console.error(req.errors);
+}
+```
+
+### Getter/Setter Approach
+
+The `Model` class and its subclasses use TypeScript's getter and setter methods for properties such as `isValid`, `errors`, and model-specific fields (e.g., `id` in `Request`).
+
+- **Getters** provide controlled, read-only access to internal state, ensuring encapsulation and allowing for computed or validated values.
+- **Setters** allow controlled mutation of properties, enabling side effects (such as triggering validation) or enforcing invariants when values are changed.
+
+**Example:**
+
+```typescript
+class Request extends Model<typeof RequestSchema> {
+  private _id?: number;
+
+  public get id(): number | undefined {
+    return this._id;
+  }
+
+  public set id(id: number | undefined) {
+    this._id = id;
+    this.validate(); // Re-validate whenever id is set
+  }
+}
+```
+
+**Benefits:**
+
+- Encapsulates internal state and validation logic
+- Allows for computed properties or lazy validation
+- Makes the API more expressive and type-safe
+- Enables future extension (e.g., auto-validation on set)
+
+This approach is used throughout the models to provide a clean, maintainable interface for data access and mutation.
+
+---
+
+- All models should extend the base `Model` class and provide a Zod schema.
+- Validation occurs automatically on construction and can be re-run with `validate()`.
+- Use `enforce()` to throw if validation fails (useful for API input validation).
+- Errors are available in the `errors` property as Zod issues.
+
+See [Models/Requests/Request.ts](Models/Requests/Request.ts) for a concrete example.
+
+---
+
 ## Project Structure
 
 - `Apis/` - API classes (grouped by service)
